@@ -27,6 +27,58 @@ function Home() {
   const [dashboardLoading, setDashboardLoading] = useState(true);
 
   // ======================================================
+  // GET LOGGED-IN USER
+  // ======================================================
+
+  const getUserName = () => {
+    try {
+      const storedUser =
+        localStorage.getItem("user");
+
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+
+        return (
+          user?.name ||
+          user?.username ||
+          user?.fullName ||
+          "User"
+        );
+      }
+    } catch (error) {
+      console.error("User data error:", error);
+    }
+
+    return "User";
+  };
+
+  const userName = getUserName();
+
+  // ======================================================
+  // GET TIME-BASED GREETING
+  // ======================================================
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12) {
+      return "Good morning";
+    }
+
+    if (hour >= 12 && hour < 17) {
+      return "Good afternoon";
+    }
+
+    if (hour >= 17 && hour < 21) {
+      return "Good evening";
+    }
+
+    return "Good night";
+  };
+
+  const greeting = getGreeting();
+
+  // ======================================================
   // FETCH HOME DATA
   // ======================================================
 
@@ -44,7 +96,9 @@ function Home() {
     try {
       setDashboardLoading(true);
 
-      const response = await axios.get(`${API_URL}/api/dashboard`);
+      const response = await axios.get(
+        `${API_URL}/api/dashboard`
+      );
 
       setDashboard(response.data);
     } catch (error) {
@@ -65,7 +119,9 @@ function Home() {
 
   const fetchStocks = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/stocks`);
+      const response = await axios.get(
+        `${API_URL}/api/stocks`
+      );
 
       let stockData = [];
 
@@ -148,7 +204,9 @@ function Home() {
 
   const fetchNews = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/news`);
+      const response = await axios.get(
+        `${API_URL}/api/news`
+      );
 
       const data = response.data;
 
@@ -264,9 +322,6 @@ function Home() {
 
           {/* ==================================================
               WELCOME SECTION
-              NOTE:
-              No "Overview" heading here.
-              Navbar already handles the page title.
           ================================================== */}
 
           <section className="mb-10">
@@ -286,7 +341,7 @@ function Home() {
                 </div>
 
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
-                  Good afternoon, Devanshi
+                  {greeting}, {userName}
                 </h1>
 
                 <p className="text-slate-400 mt-3 text-sm md:text-base max-w-2xl">
@@ -372,8 +427,6 @@ function Home() {
 
             <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5">
 
-              {/* Portfolio Value */}
-
               <DashboardCard
                 title="Portfolio Value"
                 value={
@@ -385,8 +438,6 @@ function Home() {
                 color="bg-green-500"
               />
 
-              {/* Total Investment */}
-
               <DashboardCard
                 title="Total Investment"
                 value={
@@ -397,8 +448,6 @@ function Home() {
                 icon={<TrendingUp />}
                 color="bg-blue-500"
               />
-
-              {/* Profit / Loss */}
 
               <DashboardCard
                 title="Profit / Loss"
@@ -420,8 +469,6 @@ function Home() {
                     : "bg-red-500"
                 }
               />
-
-              {/* Total Holdings */}
 
               <DashboardCard
                 title="Total Holdings"
