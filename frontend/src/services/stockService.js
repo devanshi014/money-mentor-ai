@@ -1,27 +1,39 @@
+
 import axios from "axios";
+import API_URL from "./api";
 
-const API = "/api/stocks";
+const API = `${API_URL}/api/stocks`;
 
-// Get default stocks
+// ======================================================
+// GET DEFAULT STOCKS
+// ======================================================
+
 export const getStocks = async () => {
   const res = await axios.get(API);
   return res.data;
 };
 
-// Search stock by symbol
+// ======================================================
+// SEARCH STOCK BY SYMBOL
+// ======================================================
+
 export const searchStock = async (symbol) => {
   const res = await axios.get(
-    `${API}/search?symbol=${symbol}`
+    `${API}/search?symbol=${encodeURIComponent(symbol)}`
   );
 
   return res.data;
 };
 
-// Get stock history
+// ======================================================
+// GET STOCK HISTORY
+// ======================================================
+
 export const getStockHistory = async (symbol) => {
   const res = await axios.get(
-    `${API}/history?symbol=${symbol}`
+    `${API}/history?symbol=${encodeURIComponent(symbol)}`
   );
 
   return res.data;
 };
+
