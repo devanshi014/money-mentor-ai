@@ -1,10 +1,24 @@
+import { useState } from "react";
 import {
   Bell,
   Search,
   ChevronDown,
+  LogOut,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { logout, getCurrentUser } from "../services/authService";
 
 function Navbar() {
+  const navigate = useNavigate();
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const user = getCurrentUser();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
+
   return (
     <header
       className="
@@ -23,15 +37,10 @@ function Navbar() {
         z-30
       "
     >
-      {/* ==================================================
-          RIGHT SIDE
-      ================================================== */}
 
       <div className="flex items-center gap-3">
 
-        {/* ==================================================
-            SEARCH
-        ================================================== */}
+        {/* SEARCH */}
 
         <button
           type="button"
@@ -54,7 +63,6 @@ function Navbar() {
             transition-all
             duration-200
           "
-          aria-label="Search"
         >
           <Search size={17} />
 
@@ -78,9 +86,7 @@ function Navbar() {
           </span>
         </button>
 
-        {/* ==================================================
-            NOTIFICATIONS
-        ================================================== */}
+        {/* NOTIFICATIONS */}
 
         <button
           type="button"
@@ -106,8 +112,6 @@ function Navbar() {
         >
           <Bell size={19} />
 
-          {/* Notification indicator */}
-
           <span
             className="
               absolute
@@ -123,9 +127,7 @@ function Navbar() {
           />
         </button>
 
-        {/* ==================================================
-            DIVIDER
-        ================================================== */}
+        {/* DIVIDER */}
 
         <div
           className="
@@ -138,90 +140,152 @@ function Navbar() {
           "
         />
 
-        {/* ==================================================
-            USER PROFILE
-        ================================================== */}
+        {/* USER PROFILE */}
 
-        <button
-          type="button"
-          className="
-            flex
-            items-center
-            gap-2.5
-            rounded-xl
-            px-2
-            py-1.5
-            hover:bg-slate-900
-            transition-all
-            duration-200
-          "
-          aria-label="Open profile menu"
-        >
-          {/* Avatar */}
+        <div className="relative">
 
-          <div className="relative">
+          <button
+            type="button"
+            onClick={() => setProfileOpen(!profileOpen)}
+            className="
+              flex
+              items-center
+              gap-2.5
+              rounded-xl
+              px-2
+              py-1.5
+              hover:bg-slate-900
+              transition-all
+              duration-200
+            "
+            aria-label="Open profile menu"
+          >
 
-            <div
-              className="
-                w-10
-                h-10
-                rounded-xl
-                bg-gradient-to-br
-                from-green-400
-                to-emerald-600
-                flex
-                items-center
-                justify-center
-                text-white
-                font-bold
-                shadow-lg
-                shadow-green-500/10
-              "
-            >
-              D
+            {/* Avatar */}
+
+            <div className="relative">
+
+              <div
+                className="
+                  w-10
+                  h-10
+                  rounded-xl
+                  bg-gradient-to-br
+                  from-green-400
+                  to-emerald-600
+                  flex
+                  items-center
+                  justify-center
+                  text-white
+                  font-bold
+                  shadow-lg
+                  shadow-green-500/10
+                "
+              >
+                {(user?.name || "D").charAt(0).toUpperCase()}
+              </div>
+
+              <span
+                className="
+                  absolute
+                  bottom-0
+                  right-0
+                  w-3
+                  h-3
+                  bg-green-400
+                  rounded-full
+                  border-2
+                  border-slate-950
+                "
+              />
+
             </div>
 
-            {/* Online indicator */}
+            {/* User information */}
 
-            <span
+            <div className="hidden sm:block text-left">
+
+              <p className="text-sm font-semibold text-white">
+                {user?.name || "Devanshi"}
+              </p>
+
+              <p className="text-xs text-slate-500">
+                Personal
+              </p>
+
+            </div>
+
+            <ChevronDown
+              size={16}
+              className={`hidden sm:block text-slate-500 transition-transform ${
+                profileOpen ? "rotate-180" : ""
+              }`}
+            />
+
+          </button>
+
+          {/* PROFILE DROPDOWN */}
+
+          {profileOpen && (
+            <div
               className="
                 absolute
-                bottom-0
                 right-0
-                w-3
-                h-3
-                bg-green-400
-                rounded-full
-                border-2
-                border-slate-950
+                top-14
+                w-56
+                bg-slate-900
+                border
+                border-slate-800
+                rounded-xl
+                shadow-2xl
+                overflow-hidden
+                z-50
               "
-            />
-          </div>
+            >
 
-          {/* User information */}
+              <div className="px-4 py-4 border-b border-slate-800">
 
-          <div className="hidden sm:block text-left">
+                <p className="text-sm font-semibold text-white">
+                  {user?.name || "Devanshi"}
+                </p>
 
-            <p className="text-sm font-semibold text-white">
-              Devanshi
-            </p>
+                <p className="text-xs text-slate-500 mt-1 truncate">
+                  {user?.email || ""}
+                </p>
 
-            <p className="text-xs text-slate-500">
-              Personal
-            </p>
+              </div>
 
-          </div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="
+                  w-full
+                  flex
+                  items-center
+                  gap-3
+                  px-4
+                  py-3
+                  text-sm
+                  text-red-400
+                  hover:bg-red-500/10
+                  transition
+                "
+              >
+                <LogOut size={17} />
 
-          {/* Dropdown */}
+                <span>
+                  Logout
+                </span>
 
-          <ChevronDown
-            size={16}
-            className="hidden sm:block text-slate-500"
-          />
+              </button>
 
-        </button>
+            </div>
+          )}
+
+        </div>
 
       </div>
+
     </header>
   );
 }
