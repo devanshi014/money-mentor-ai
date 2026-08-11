@@ -6,7 +6,10 @@ import {
   LogOut,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { logout, getCurrentUser } from "../services/authService";
+import {
+  logout,
+  getCurrentUser,
+} from "../services/authService";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -14,8 +17,12 @@ function Navbar() {
 
   const user = getCurrentUser();
 
+  const userName = user?.name || user?.username || "User";
+  const userEmail = user?.email || "";
+
   const handleLogout = () => {
     logout();
+    setProfileOpen(false);
     navigate("/login", { replace: true });
   };
 
@@ -37,7 +44,6 @@ function Navbar() {
         z-30
       "
     >
-
       <div className="flex items-center gap-3">
 
         {/* SEARCH */}
@@ -63,6 +69,7 @@ function Navbar() {
             transition-all
             duration-200
           "
+          aria-label="Search"
         >
           <Search size={17} />
 
@@ -146,7 +153,7 @@ function Navbar() {
 
           <button
             type="button"
-            onClick={() => setProfileOpen(!profileOpen)}
+            onClick={() => setProfileOpen((prev) => !prev)}
             className="
               flex
               items-center
@@ -161,7 +168,7 @@ function Navbar() {
             aria-label="Open profile menu"
           >
 
-            {/* Avatar */}
+            {/* AVATAR */}
 
             <div className="relative">
 
@@ -182,8 +189,12 @@ function Navbar() {
                   shadow-green-500/10
                 "
               >
-                {(user?.name || "D").charAt(0).toUpperCase()}
+                {userName
+                  .charAt(0)
+                  .toUpperCase()}
               </div>
+
+              {/* ONLINE INDICATOR */}
 
               <span
                 className="
@@ -201,12 +212,12 @@ function Navbar() {
 
             </div>
 
-            {/* User information */}
+            {/* USER INFORMATION */}
 
             <div className="hidden sm:block text-left">
 
               <p className="text-sm font-semibold text-white">
-                {user?.name || "Devanshi"}
+                {userName}
               </p>
 
               <p className="text-xs text-slate-500">
@@ -215,11 +226,17 @@ function Navbar() {
 
             </div>
 
+            {/* DROPDOWN ARROW */}
+
             <ChevronDown
               size={16}
-              className={`hidden sm:block text-slate-500 transition-transform ${
-                profileOpen ? "rotate-180" : ""
-              }`}
+              className={`
+                hidden
+                sm:block
+                text-slate-500
+                transition-transform
+                ${profileOpen ? "rotate-180" : ""}
+              `}
             />
 
           </button>
@@ -243,17 +260,23 @@ function Navbar() {
               "
             >
 
+              {/* USER DETAILS */}
+
               <div className="px-4 py-4 border-b border-slate-800">
 
                 <p className="text-sm font-semibold text-white">
-                  {user?.name || "Devanshi"}
+                  {userName}
                 </p>
 
-                <p className="text-xs text-slate-500 mt-1 truncate">
-                  {user?.email || ""}
-                </p>
+                {userEmail && (
+                  <p className="text-xs text-slate-500 mt-1 truncate">
+                    {userEmail}
+                  </p>
+                )}
 
               </div>
+
+              {/* LOGOUT */}
 
               <button
                 type="button"
@@ -285,7 +308,6 @@ function Navbar() {
         </div>
 
       </div>
-
     </header>
   );
 }
