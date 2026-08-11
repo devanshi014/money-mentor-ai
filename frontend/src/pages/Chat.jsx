@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 
 import Navbar from "../components/Navbar";
@@ -8,6 +9,13 @@ function Chat() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // ======================================================
+  // BACKEND API URL
+  // ======================================================
+
+  const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   // ======================================================
   // SEND MESSAGE
@@ -38,7 +46,7 @@ function Chat() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
+      const response = await fetch(`${API_URL}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -122,14 +130,12 @@ function Chat() {
 
         <main className="flex-1 min-h-0 px-5 py-6 md:px-8 lg:px-10">
           <div className="h-[calc(100vh-130px)] max-w-[1400px] mx-auto">
-
             {/* ==================================================
                 CHAT HEADER / CONTROLS
             ================================================== */}
 
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-
                 <div
                   className="
                     w-10
@@ -155,7 +161,6 @@ function Chat() {
                     Personal finance assistant
                   </p>
                 </div>
-
               </div>
 
               {/* ==================================================
@@ -215,7 +220,6 @@ function Chat() {
                 loading={loading}
               />
             </div>
-
           </div>
         </main>
       </div>
@@ -224,3 +228,4 @@ function Chat() {
 }
 
 export default Chat;
+
