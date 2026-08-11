@@ -13,3 +13,5 @@ export const getNews = async () => {
   return response.data;
 };
 
+
+
