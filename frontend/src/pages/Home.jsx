@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_URL from "../services/api";
 
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
@@ -43,7 +44,7 @@ function Home() {
     try {
       setDashboardLoading(true);
 
-      const response = await axios.get("/api/dashboard");
+      const response = await axios.get(`${API_URL}/api/dashboard`);
 
       setDashboard(response.data);
     } catch (error) {
@@ -64,7 +65,7 @@ function Home() {
 
   const fetchStocks = async () => {
     try {
-      const response = await axios.get("/api/stocks");
+      const response = await axios.get(`${API_URL}/api/stocks`);
 
       let stockData = [];
 
@@ -147,7 +148,7 @@ function Home() {
 
   const fetchNews = async () => {
     try {
-      const response = await axios.get("/api/news");
+      const response = await axios.get(`${API_URL}/api/news`);
 
       const data = response.data;
 
