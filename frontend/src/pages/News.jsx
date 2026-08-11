@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_URL from "../services/api";
 
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
@@ -24,7 +25,7 @@ function News() {
       setLoading(true);
       setError("");
 
-      const response = await axios.get("/api/news");
+      const response = await axios.get(`${API_URL}/api/news`);
 
       console.log("News API Response:", response.data);
 
