@@ -1,8 +1,15 @@
+
 import axios from "axios";
 
-const API = "/api/auth";
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-// Register
+const API = `${API_URL}/api/auth`;
+
+// ======================================================
+// REGISTER
+// ======================================================
+
 export const register = async (userData) => {
   const { data } = await axios.post(`${API}/register`, userData);
 
@@ -17,7 +24,10 @@ export const register = async (userData) => {
   return data;
 };
 
-// Login
+// ======================================================
+// LOGIN
+// ======================================================
+
 export const login = async (userData) => {
   const { data } = await axios.post(`${API}/login`, userData);
 
@@ -32,24 +42,48 @@ export const login = async (userData) => {
   return data;
 };
 
-// Logout
+// ======================================================
+// LOGOUT
+// ======================================================
+
 export const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
 };
 
-// Get current user
+// ======================================================
+// GET CURRENT USER
+// ======================================================
+
 export const getCurrentUser = () => {
   const user = localStorage.getItem("user");
-  return user ? JSON.parse(user) : null;
+
+  if (!user) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(user);
+  } catch (error) {
+    console.error("Invalid stored user data:", error);
+    localStorage.removeItem("user");
+    return null;
+  }
 };
 
-// Get JWT token
+// ======================================================
+// GET JWT TOKEN
+// ======================================================
+
 export const getToken = () => {
   return localStorage.getItem("token");
 };
 
-// Check login status
+// ======================================================
+// CHECK LOGIN STATUS
+// ======================================================
+
 export const isAuthenticated = () => {
   return !!localStorage.getItem("token");
 };
+
